@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# Managed by puppet. Created on: <%= Time.now %>
+#
+#sudo virsh dompmwakeup --domain W10Gaming
+
+echo <%= @osfamily %>
+
+seconds=0
+division=10
+printf "%s" "$0: Waiting for shutdown of VM "
+while :
+do
+    sleep 0.1
+    vmstatus=$(sudo virsh dominfo --domain W10Gaming | grep Toestand)
+    if [[ $vmstatus  == *"afgesloten"* ]] || [[ $vmstatus  == *"pmsuspended"* ]]; then
+        printf '[Shut off]\n'
+        break
+    elif [ $seconds=0 ]; then
+        sudo virsh dompmsuspend --domain W10Gaming --target mem
+#        sudo virsh shutdown --domain W10Gaming
+    fi
+    seconds=$(($seconds + 1))
+    # echo -n Seconds:$seconds
+    if [ $seconds -gt 300 ]
+    then
+        printf '[Failed]\n'
+        break
+    fi
+done
+echo Waited for $(expr $seconds / $division) seconds
+systemctl suspend
+
