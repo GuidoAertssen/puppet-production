@@ -1,6 +1,6 @@
 class mypackages::docker {
    $prerequisites = [ 'apt-transport-https', 'ca-certificates', 'curl', 'gnupg', 'lsb-release' ]
-   $docker_packages = [ 'docker-ce', 'docker-ce-cli', 'containerd.io' ]
+   $docker_packages = [ 'docker-ce', 'docker-ce-cli', 'containerd.io', 'docker-compose'  ]
 
    if $osfamily == 'debian' {
       package { $docker_packages:
